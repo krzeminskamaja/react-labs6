@@ -11,22 +11,83 @@ class Employees extends Component {
             hasErrors: false,
             isFetched: false,
             employees: {},
-            formVisible: false
+            formVisible: false,
+            howManyPpl: 0
         };
-        
+        this.showForm = this.showForm.bind(this);
+        this.hideForm = this.hideForm.bind(this);
+        this.submitEmployee = this.submitEmployee.bind(this);
+        this.showEmployees = this.showEmployees.bind(this);
     }
-  
+   
+    showEmployees(){
+      return  fetch("http://localhost:3004/employees")
+      .then(res => res.json())
+      .then(res => this.setState({ employees: res, isFetched: true }))
+      .catch(() => this.setState({ hasErrors: true }));
+    }
     componentDidMount() {
-      fetch("http://localhost:3004/employees")
-        .then(res => res.json())
-        .then(res => this.setState({ employees: res, isFetched: true }))
-        .catch(() => this.setState({ hasErrors: true }));
+     this.showEmployees();
     }
   
+    showForm()
+    {
+      this.setState({formVisible: true});
+    }
+    hideForm()
+    {
+      this.setState({formVisible: false});
+    }
      handleClick = e => {
         const newValue = !this.state.formVisible;
         this.setState({formVisible: newValue});
     }
+    submitEmployee(event) {
+      this.setState({isSaving: true,howManyPpl: ppl})
+      console.log(event.target);
+      event.preventDefault();
+      const ppl = this.state.howManyPpl+1;
+     
+      const form = event.target;
+      const ia = form.elements['isActive'].value == "on" ? true : false;
+      const ag = form.elements['age'].value;
+      const n = form.elements['name'].value;
+      const comp = form.elements['company'].value;
+      const email = form.elements['email'].value;
+      const newEmployee = {
+      isActive: ia,
+      age: ag,
+      name: n,
+      company: comp,
+      email: email
+    }
+    
+    console.log(newEmployee);
+    const newEmployeeStringified = JSON.stringify(newEmployee);
+    
+  
+  newEmployee.id = newEmployeeStringified.split('').reduce((a,b)=>{a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);
+  
+    fetch('http://localhost:3004/employees', {
+      method: 'POST', 
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(newEmployee)
+    })
+    .then(resp => {
+      if (resp.ok) {
+          return resp.json()
+      } else {
+          throw new Error("Wystąpił błąd połączenia!")
+      }
+    })
+    .catch(error => console.dir("Błąd: ", error));
+    this.setState({isSaving: false, isFetched: false})
+    this.showEmployees()
+
+  }
 
     render() {
       if(this.state.hasErrors)
@@ -38,7 +99,8 @@ class Employees extends Component {
         <div>
             <div>
             <Button block variant="info" onClick={this.handleClick}>Add Employee</Button>
-            {this.state.formVisible?<div><AddForm/><Button variant="danger" onClick={this.handleClick}>Cancel form</Button></div>:null}
+            {this.state.formVisible?this.state.isSaving?<p>Saving ...</p>:<div><AddForm submitEmployee={this.submitEmployee} hideForm={this.hideForm}/>
+            </div>:null}
             </div>
         {this.state.employees.map((e, ind) => { return (
 
