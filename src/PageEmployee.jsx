@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Button from 'react-bootstrap/Button';
+import { Link } from 'react-router-dom';
 
 export default class PageEmployee extends Component{
     constructor(props){
@@ -14,7 +15,7 @@ export default class PageEmployee extends Component{
                 <label>Name: <input name="name" type="text"></input></label>
                 <label>Company: <input name="company" type="text"></input></label>
                 <label>Email: <input name="email" type="text"></input></label>
-                <Button variant="success" onClick={this.props.hideForm}>Cancel</Button>
+                <Link to="/"><Button variant="success" onClick={this.props.hideForm}>Cancel</Button></Link>
                 <Button variant="success" type="submit">Submit</Button>
             </form>
         );
