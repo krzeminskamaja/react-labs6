@@ -56,6 +56,7 @@ class Employees extends Component {
         const newValue = !this.state.formVisible;
         this.setState({formVisible: newValue});
     }
+    
     submitEmployee(event) {
       this.setState({isSaving: true,howManyPpl: ppl})
       console.log(event.target);

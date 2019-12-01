@@ -2,12 +2,11 @@ import React, { Component } from "react";
 import Button from 'react-bootstrap/Button';
 import PageEmployee from './PageEmployee';
 import { Link } from 'react-router-dom';
+import { withRouter } from "react-router";
 
-export default class PageEmployeesList extends Component {
+class PageEmployeesList extends Component {
     constructor(props){
-        
         super(props);
-        
         this.state={
             hasErrors: false,
             isFetched: false,
@@ -40,6 +39,7 @@ export default class PageEmployeesList extends Component {
       .then(res => res.json())
       .then(res => this.setState({ employees: res, isFetched: true }))
       .catch(() => this.setState({ hasErrors: true }));
+      
     }
     componentDidMount() {
      this.showEmployees();
@@ -98,11 +98,11 @@ export default class PageEmployeesList extends Component {
       } else {
           throw new Error("Wystąpił błąd połączenia!")
       }
-    })
+    }).then(
+      this.props.history.push('/')).then(() => this.props.handleReloadData())
     .catch(error => console.dir("Błąd: ", error));
     this.setState({isSaving: false, isFetched: false})
     this.showEmployees()
-
   }
 
     render() {
@@ -114,8 +114,8 @@ export default class PageEmployeesList extends Component {
           return(
         <div>
             <div>
-            <Button block variant="info" onClick={this.handleClick}>Add Employee</Button>
-            {this.state.formVisible?this.state.isSaving?<p>Saving ...</p>:<div><AddForm submitEmployee={this.submitEmployee} hideForm={this.hideForm}/>
+            <Button block variant="info" onClick={this.handleClick}>Add Employee (lab6)</Button>
+            {this.state.formVisible?this.state.isSaving?<p>Saving ...</p>:<div><PageEmployee submitEmployee={this.submitEmployee} hideForm={this.hideForm}/>
             </div>:null}
             </div>
         {this.state.employees.map((e, ind) => { return (
@@ -132,10 +132,11 @@ export default class PageEmployeesList extends Component {
           )
         })
         }
-        <Link to="new"><Button>Create new employee</Button></Link>
+        <Link to="new" ><Button>Create new employee (lab8)</Button></Link>
       </div>
           )
       }
 
     }
   }
+export default withRouter(PageEmployeesList)
