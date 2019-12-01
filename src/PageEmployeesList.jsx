@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import Button from 'react-bootstrap/Button';
-import AddForm from './AddForm';
+import PageEmployee from './PageEmployee';
 
-class Employees extends Component {
+export default class PageEmployeesList extends Component {
     constructor(props){
         
         super(props);
@@ -56,6 +56,7 @@ class Employees extends Component {
         const newValue = !this.state.formVisible;
         this.setState({formVisible: newValue});
     }
+    
     submitEmployee(event) {
       this.setState({isSaving: true,howManyPpl: ppl})
       console.log(event.target);
@@ -136,5 +137,3 @@ class Employees extends Component {
 
     }
   }
-
-export default Employees;
