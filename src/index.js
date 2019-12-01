@@ -5,4 +5,4 @@ import Employees from './Employees'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import PageEmpoyeesList from './PageEmployeesList'
 
-render(<PageEmpoyeesList/>, document.getElementById('root'))
+render(<App/>, document.getElementById('root'))
